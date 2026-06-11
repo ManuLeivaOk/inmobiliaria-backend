@@ -3,16 +3,27 @@ services:
     image: postgres:16-alpine
     container_name: inmobiliaria-db
     restart: unless-stopped
-    ports:
-      - '5432:5432'
+
+    # ❌ NO exponer puerto en producción
+    # ports:
+    #   - '5432:5432'
+
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: inmobiliaria_user
+      POSTGRES_PASSWORD: S3gura_Y_Unica_2026!
       POSTGRES_DB: inmobiliaria
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ./sql/properties.sql:/docker-entrypoint-initdb.d/02-properties.sql:ro
 
+    networks:
+      - inmobiliaria_net
+
 volumes:
   postgres_data:
+
+networks:
+  inmobiliaria_net:
+    driver: bridge
