@@ -4,9 +4,9 @@ services:
     container_name: inmobiliaria-db
     restart: unless-stopped
 
-    # ❌ NO exponer puerto en producción
-    # ports:
-    #   - '5432:5432'
+    # ❌ NO exponer puerto en producción (Mantenelo comentado)
+    ports:
+      - '5432:5432'
 
     environment:
       POSTGRES_USER: inmobiliaria_user
@@ -20,10 +20,74 @@ services:
 
     networks:
       - inmobiliaria_net
+    deploy:
+      resources:
+        limits:
+          memory: 400M # 🔒 Ponemos límite de RAM para cuidar tu VPS
 
-volumes:
-  postgres_data:
+  # 🚀 AGREGAMOS EL BACKEND ACÁ ADENTRO
+  backend:
+    image: nest-backend-prod:latest
+    container_name: nest-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      # ⚠️ CLAVE: El host de la DB ya no es 'localhost', ahora es el nombre del servicio: 'postgres'
+      - DATABASE_URL=postgresql://inmobiliaria_user:S3gura_Y_Unica_2026!@postgres:5432/inmobiliaria
+      # Agrega acá abajo cualquier otra variable que use tu .env (JWT_SECRET, etc.)
+      - DB_HOST=postgres
+    depends_on:
+      - postgres # Espera a que la base de datos intente levantar primero
+    networks:
+      - inmobiliaria_net # Al estar en la misma red, se hablan directamente entre contenedores
+    deploy:
+      resources:
+        limits:
+          memory: 450M # 🔒 Límite de RAM estricto para NestJS
+
+  # 🚀 AGREGAMOS EL FRONTEND ACÁ ADENTRO
+  frontend:
+   image: next-frontend-prod:latest
+   container_name: next-frontend
+   restart: unless-stopped
+   depends_on:
+     - backend
+   networks:
+     - inmobiliaria_net
+   deploy:
+     resources:
+       limits:
+         memory: 450M
+
+  # --- PROXY INVERSO Y SSL AUTOMÁTICO ---
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy-proxy
+    restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - inmobiliaria_net
+    depends_on:
+      - frontend
+      - backend
 
 networks:
   inmobiliaria_net:
     driver: bridge
+
+# --- VOLÚMENES PERSISTENTES ---
+volumes:
+  postgres_data:
+  caddy_data:      # <--- Agregá este
+  caddy_config:    # <--- Agregá este

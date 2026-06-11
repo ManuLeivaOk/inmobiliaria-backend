@@ -35,13 +35,16 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.enableCors({
-    // Permite tu front (asegurate que apunte a http://localhost:3001)
-    origin: config.get<string>('cors.origin') ?? 'http://localhost:3001',
+    // 👥 Array con todos los orígenes permitidos (IP actual y dominios futuros)
+    origin: [
+      'http://localhost:3001',
+      'http://200.58.96.221:3002',
+      'http://continentalpropiedades.site',
+      'https://continentalpropiedades.site' // Agregalo también con HTTPS para cuando le pongas el certificado SSL
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    // 🛡️ Agregamos cabeceras estándar que a veces el navegador inyecta al pedir imágenes
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Range'],
-    // 👁️ Súper importante: expone las cabeceras para que el navegador no sospeche del recurso cruzado
     exposedHeaders: ['Content-Range', 'X-Content-Range'],
   });
 

@@ -1,0 +1,7 @@
+continentalpropiedades.site, www.continentalpropiedades.site {
+    reverse_proxy frontend:3001
+}
+
+api.continentalpropiedades.site {
+    reverse_proxy backend:3000
+}

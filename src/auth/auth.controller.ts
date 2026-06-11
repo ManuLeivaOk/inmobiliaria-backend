@@ -288,11 +288,11 @@ export class AuthController {
 
     res.cookie(cookieName ?? SWAGGER_REFRESH_COOKIE, token, {
       httpOnly: true,
-      secure: secure ?? isProduction,
-      sameSite: sameSite ?? 'strict',
+      secure: true,
+      sameSite: 'none',
       expires: expiresAt,
       path: '/',
-      ...(domain && domain !== 'localhost' ? { domain } : {}),
+      domain: '.continentalpropiedades.site',
     });
   }
 
@@ -307,10 +307,10 @@ export class AuthController {
 
     res.clearCookie(cookieName ?? SWAGGER_REFRESH_COOKIE, {
       httpOnly: true,
-      secure: secure ?? isProduction,
-      sameSite: sameSite ?? 'strict',
+      secure: true,
+      sameSite: 'none',
       path: '/',
-      ...(domain && domain !== 'localhost' ? { domain } : {}),
+      domain: '.continentalpropiedades.site',
     });
   }
 
