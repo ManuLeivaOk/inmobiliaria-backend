@@ -1,0 +1,55 @@
+# dependencies
+node_modules/
+
+# next
+.next/
+out/
+
+# env
+.env
+.env.local
+.env.development
+.env.production
+
+# logs
+*.log
+npm-debug.log*
+
+# macOS
+.DS_Store
+
+# vscode
+.vscode/
+
+# build
+dist/
+coverage/
+
+# typescript
+*.tsbuildinfo
+
+# dependencies
+node_modules/
+
+# nest
+dist/
+
+# next
+.next/
+out/
+
+# envs
+.env
+.env.local
+.env.production
+.env.development
+
+# logs
+*.log
+
+# editor
+.vscode/
+.idea/
+
+# os
+.DS_Store
