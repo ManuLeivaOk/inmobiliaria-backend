@@ -33,11 +33,13 @@ services:
     env_file:
       - .env
     environment:
-      - NODE_ENV=production
-      # ⚠️ CLAVE: El host de la DB ya no es 'localhost', ahora es el nombre del servicio: 'postgres'
-      - DATABASE_URL=postgresql://inmobiliaria_user:S3gura_Y_Unica_2026!@postgres:5432/inmobiliaria
-      # Agrega acá abajo cualquier otra variable que use tu .env (JWT_SECRET, etc.)
-      - DB_HOST=postgres
+      NODE_ENV: production
+      DB_HOST: inmobiliaria-db # Importante: el nombre del servicio en Docker
+      DB_PORT: 5432
+      DB_USERNAME: inmobiliaria_user
+      DB_PASSWORD: S3gura_Y_Unica_2026!
+      DB_NAME: inmobiliaria
+      DB_SYNCHRONIZE: 'true'
     depends_on:
       - postgres # Espera a que la base de datos intente levantar primero
     networks:
