@@ -257,7 +257,7 @@ export class AuthController {
 
   private assertValidRegisterApiKey(providedApiKey?: string): void {
     const expectedApiKey = this.config.get<string>('auth.registerApiKey');
-
+    console.log('providedApiKey', providedApiKey, expectedApiKey);
     if (!expectedApiKey || !providedApiKey) {
       throw new ForbiddenException('No tenés permisos para registrar usuarios');
     }
